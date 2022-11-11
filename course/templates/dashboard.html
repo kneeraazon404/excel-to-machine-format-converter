@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+  {% if request.user.is_superuser %}
+  <br />
+  <a class="btn btn-primary px-2 py-2 my-2 col-md-2 col-lg-2 col-sm-2" href="{% url 'register' %}"
+    style="text-decoration: none; color: white">
+    Add New User</a>
+  <br />
+  <table class="table table-bordered table-responsive-md table-responsive-lg table-responsive-sm table-striped">
+    <thead class="text-dark">
+      <tr>
+        <th scope="col"><strong>#UID</strong></th>
+        <th scope="col">Date Created</th>
+        <th scope="col">Full Name</th>
+        <th scope="col">Username</th>
+        <th scope="col">Email</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <th scope="row">{{user.id}}</th>
+        <th>{{user.date_joined | date:"M d, Y"}}</th>
+        <td>{{user.profile.full_name}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.email}}</td>
+        <td>
+          <a class="btn btn-primary px-2 py-1 w-100" href="{% url 'user-update' user.id %}"
+            style="text-decoration: none; color: white">
+            Update</a>
+        </td>
+        <td>
+          <a class="btn btn-danger px-2 py-1 w-100" href="{% url 'user-delete' user.id %}"
+            style="text-decoration: none; color: white">
+            Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %} {% endif %}
+  <br />
+  <div class="container">
+    <div class="row">
+
+      <a class="btn btn-primary px-2 py-2 m-2 col-md-2 col-sm-1 col-lg-2" href="{% url 'store-create' %}"
+        style="text-decoration: none; color: white">
+        Add New File</a>
+      <a class="btn btn-danger px-2 py-2 col-md-2 col-sm-1 col-lg-2 m-2 text-white" href="{% url 'add_brand_name' %}"
+        style="text-decoration: none; color: white">
+        Add New Brand</a>
+      <a class="btn btn-info px-2 py-2 col-md-2 col-sm-1 col-lg-2 m-2 text-white" href="{% url 'add_market_id' %}"
+        style="text-decoration: none; color: white">
+        Add Market ID</a>
+      <a class="btn btn-dark px-2 py-2 col-md-2 col-sm-1 col-lg-2 m-2 text-white" href="{% url 'add_terminal_id' %}"
+        style="text-decoration: none; color: white">
+        Add Terminal ID</a>
+      <a class="btn btn-success px-2 py-2 col-md-2 col-sm-1 col-lg-2 m-2 text-white" href="{% url 'add_store_number' %}"
+        style="text-decoration: none; color: white">
+        Add Store Number</a>
+    </div>
+    <br />
+
+    <table
+      class="table table-bordered table-responsive-lg table-responsive-sm table-responsive-md table-responsive-xl table-responsive-xxl table-striped">
+      <thead class="text-dark bordered border-3">
+        <tr>
+          <th scope="col"><strong>#SID</strong></th>
+          <th scope="col">Date Created</th>
+          <th scope="col">User/Uploader</th>
+          <th scope="col">Brand Name</th>
+          <th scope="col">Uploaded File</th>
+          <th scope="col">Converted File</th>
+          <!-- <th scope="col">Update</th>
+        <th scope="col">Delete</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for store in stores %} {% if store.converted_file %}
+        <tr>
+          <th scope="row">{{store.id}}</th>
+          <th>{{store.created_at | date:"M d, Y" }}</th>
+          {% if store.user.profile.full_name %}
+          <td>{{store.user.profile.full_name}}</td>
+          {% else %}
+          <td>{{store.user.username}}</td>
+          {% endif %}
+          <td>{{store.brand_name}}</td>
+          <td>
+            <a class="btn btn-primary px-2 py-1 w-100" href="{{store.uploaded_file.url}}"
+              style="text-decoration: none; color: white">
+              Download</a>
+          </td>
+
+          <td>
+            <a class="btn btn-primary px-2 py-1 w-100" href="{{store.converted_file.url}}"
+              style="text-decoration: none; color: white">
+              view</a>
+          </td>
+
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock body %}
